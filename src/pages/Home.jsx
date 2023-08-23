@@ -2,14 +2,16 @@ import { useEffect, useState } from "react"
 import Carousel from "../components/Carousel"
 import axios from "axios" 
 import { Link as Anchor } from "react-router-dom"
+import apiUrl from '../apiUrl'
 
 export default function Home() {
-const [data,setdata] = useState([])
+const [data,setData] = useState([])
 
 useEffect(
   ()=>{
-    axios('/data.json')
-    .then(res=>setdata(res.data))
+    axios(apiUrl+'cities/carousel')
+    //.then(res=>console.log(res.data.data_carousel))
+    .then(res=>setData(res.data.data_carousel))
     .catch(err=>console.log(err))
   },
   []

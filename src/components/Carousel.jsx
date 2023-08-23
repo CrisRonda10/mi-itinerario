@@ -1,10 +1,21 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Arrow from "../components/Arrow"
 import Card from "../components/Card"
 
 export default function Carousel({ data }) {
   let [counter, setCounter] = useState(0)
   let [counterTo, setCounterTo] = useState(4)
+  
+  useEffect(() => {
+    // Nueva función para avanzar automáticamente cada 4 segundos
+    const interval = setInterval(() => {
+      next_slide()
+    }, 4000)
+
+    // Limpiar el intervalo cuando se desmonta el componente
+    return () => clearInterval(interval)
+  })
+  
   function next_slide(){
     if (data.length <= counterTo){
       setCounter(0)
@@ -30,7 +41,7 @@ export default function Carousel({ data }) {
         <div className="mt-[30px] mb-[30px] lg:mt-0 lg:mb-0 w-[300px] md:w-full bg-[#4f46e5] rounded-2xl">
           <div className="flex justify-center text-white"><p className="pt-5 underline decoration-2 text-[17px] md:text-xl font-bold">Popular MYTINERARIES!</p></div>
           <div className="flex flex-wrap justify-center md:m-5">
-            {data.slice(counter, counterTo ).map(each => <Card key={each.id} src={each.photo} alt={each.id} text={each.city} />)}
+            {data.slice(counter, counterTo ).map(each => <Card key={each._id} src={each.photo} alt={each.id} text={each.city} />)}
           </div>
           <div className="flex justify-center items-center text-white"><p className="pb-3 px-1  italic text-center text-[14px] lg:text-[16px]">"Find your perfect trip, designed by insiders who know and love their cities!"</p></div>
         </div>

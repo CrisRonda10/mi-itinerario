@@ -1,12 +1,71 @@
+import { useEffect, useState, useRef } from "react"
+import Gallery from "../components/Gallery"
+import axios from "axios"
+import apiUrl from "../apiUrl"
+
 
 export default function Cities() {
-  return (
-    <div className="min-h-[78vh] flex flex-col justify-center items-center">
-    <p className="">Cities under construction</p>
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
-</svg>
+  const [cities,setCities] = useState([])
+  const [reEffect, setReEffect] = useState(true)
+  const [noResults, setNoResults] = useState(false)
+  const text = useRef()
 
-    </div>
-  )
+  useEffect(() => {
+    axios(apiUrl+'cities?city='+text.current.value.trim())
+      .then(res => {
+        //console.log(res.data) // Agrego un console.log para verificar la respuesta del servidor
+        if (res.data.response.length === 0) {
+          setNoResults(true)
+        } else {
+          setNoResults(false)
+          setCities(res.data.response)
+        }
+      })
+      .catch(err => {
+        //console.log(err.response.data.message) // Agrego un console.log para mostrar un mensaje de error en caso de que haya un problema con el servidor
+        setNoResults(true)
+      })
+  }, [reEffect])
+
+  function handleFilter() {
+    setReEffect(!reEffect)
+  }
+
+  //console.log(noResults) // Agrego un console.log para verificar si el estado de noResults está cambiando correctamente
+ 
+  return (
+    <div className="min-h-[78vh] flex flex-col justify-center items-center pb-8 bg-[url(/img/foto-1.jpg)] bg-cover grow">
+       <div className="flex flex-col text-white items-center mt-[150px] lg:mt-[270px] mx-1 gap-3">
+        <h1 className="text-4xl bg-black font-bold mb-2 p-1 rounded-md">Cities</h1>
+         <p className="text-lg bg-black italic flex items-center text-justify p-1 rounded-md">Collection of the most beautiful places and experiences</p>
+        </div>
+      <form className="max-w-sm px-4 mb-7 mt-9">
+        <div className="relative">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="absolute top-0 bottom-0 w-6 h-6 my-auto text-[#4f46e5] left-3"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+          <input
+            ref={text}
+            type="text"
+            name="text"
+            id="text"
+            onKeyUp={handleFilter}
+            placeholder="Search your city"
+            className="w-full py-3 pl-12 pr-4 text-black border rounded-md outline-none bg-gray-50 focus:bg-white focus:border-[#4f46e5]"
+          />
+        </div>
+      </form>
+      {noResults ? <p className="mt-4 p-3 font-semibold italic text-white md:text-[30px] border-4 bg-black">City not found. Please find another city</p> : <Gallery cities={cities}/>}
+    </div>)
 }
