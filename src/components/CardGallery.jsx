@@ -10,7 +10,7 @@ export default function CardGallery({src, alt, city, country, id}) {
 </svg>
 {city} - {country}</p>
       <img src={src} alt={alt} className="w-[300px] h-[200px] rounded-[10px] border-4 border-white mb-1" />
-      <Anchor to={'/city/'+id} className="w-[100px] h-[35px] bg-[#4f46e5] text-white py-[10px] px-[20px] rounded-[8px] text-[12px]">View More</Anchor>
+      <Anchor to={'/city/'+id} className="w-[100px] h-[35px] bg-[#4f46e5] text-white py-[10px] px-[20px] rounded-[8px] text-[12px] hover:bg-[#3f37d3] focus:outline-none focus:bg-[#3f37d3]">View More</Anchor>
       </div>
   )
 } 
