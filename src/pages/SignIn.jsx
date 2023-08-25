@@ -41,5 +41,3 @@ export default function SignIn() {
     )
 }
 
-  // <label for="mail" className="block text-sm font-semibold text-white cursor-pointer">Email:</label>
-  //                          <input ref={mail} type="text" name="mail" id="mail" className="block w-full px-4 py-2 mt-2 text-[#4f46e5] font-bold bg-white border rounded-md focus:border-[#4f46e5] focus:ring-[#4f46e5] focus:outline-none focus:ring focus:ring-opacity-40" />
