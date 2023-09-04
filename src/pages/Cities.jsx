@@ -1,43 +1,40 @@
 import { useEffect, useState, useRef } from "react"
 import Gallery from "../components/Gallery"
-import axios from "axios"
-import apiUrl from "../apiUrl"
+import { useSelector,useDispatch } from "react-redux"
+import city_actions from "../store/actions/cities"
+const {read_cities} = city_actions
 
 
 export default function Cities() {
-  const [cities,setCities] = useState([])
+  
+  const cities= useSelector(store=>store.cities.cities)
   const [reEffect, setReEffect] = useState(true)
   const [noResults, setNoResults] = useState(false)
   const text = useRef()
+  const dispatch = useDispatch()
+  console.log(cities);
 
   useEffect(() => {
-    axios(apiUrl+'cities?city='+text.current.value.trim())
-      .then(res => {
-        //console.log(res.data) // Agrego un console.log para verificar la respuesta del servidor
-        if (res.data.response.length === 0) {
-          setNoResults(true)
-        } else {
-          setNoResults(false)
-          setCities(res.data.response)
-        }
-      })
-      .catch(err => {
-        //console.log(err.response.data.message) // Agrego un console.log para mostrar un mensaje de error en caso de que haya un problema con el servidor
-        setNoResults(true)
-      })
-  }, [reEffect])
+    dispatch(read_cities({ text: text.current?.value.trim() }));
+  }, [reEffect]);
+
+  useEffect(() => {
+    if (cities.length === 0) {
+      setNoResults(true);
+    } else {
+      setNoResults(false);
+    }
+  }, [cities]);
 
   function handleFilter() {
     setReEffect(!reEffect)
   }
 
-  //console.log(noResults) // Agrego un console.log para verificar si el estado de noResults está cambiando correctamente
- 
   return (
     <div className="min-h-[78vh] flex flex-col justify-center items-center pb-8 bg-[url(/img/foto-1.jpg)] bg-cover grow">
-       <div className="flex flex-col text-white items-center mt-[150px] lg:mt-[270px] mx-1 gap-3">
+      <div className="flex flex-col text-white items-center mt-[150px] lg:mt-[270px] mx-1 gap-3">
         <h1 className="text-4xl bg-black font-bold mb-2 p-1 rounded-md">Cities</h1>
-         <p className="text-lg bg-black italic flex items-center text-justify p-1 rounded-md">Collection of the most beautiful places and experiences</p>
+        <p className="text-lg bg-black italic flex items-center text-justify p-1 rounded-md">Collection of the most beautiful places and experiences</p>
         </div>
       <form className="max-w-sm px-4 mb-7 mt-9">
         <div className="relative">
@@ -66,6 +63,6 @@ export default function Cities() {
           />
         </div>
       </form>
-      {noResults ? <p className="mt-4 p-3 font-semibold italic text-white md:text-[30px] border-4 bg-black">City not found. Please find another city</p> : <Gallery cities={cities}/>}
+      {noResults && cities.length === 0 ? (<p className="mt-4 p-3 font-semibold italic text-white md:text-[30px] border-4 bg-black">City not found. Please find another city</p>) : (<Gallery cities={cities}/>)}
     </div>)
 }
