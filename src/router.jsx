@@ -6,6 +6,7 @@ import Details from "./pages/Details";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 
+
 const router = createBrowserRouter([
     { 
         path:'/', 
