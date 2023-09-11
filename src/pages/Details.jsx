@@ -6,6 +6,7 @@ import itinerary_actions from "../store/actions/itineraries"
 import ItineraryComponent from "../components/ItineraryComponent"
 
 
+
 const {read_city} = city_actions
 const {read_itineraries_from_city} = itinerary_actions
 
@@ -30,6 +31,7 @@ export default function Details() {
 
     const itineraries = useSelector(store=>store.itineraries.itineraries_from_city)
     console.log(itineraries);
+    
 
   return (
     <div className="w-full min-h-[78vh] flex items-center justify-center ">
@@ -47,7 +49,7 @@ export default function Details() {
           </span>
           <div>
           {show && (itineraries.length > 0 ? (
-            itineraries.map(each=><ItineraryComponent key={each._id} name={each.name} photo={each.photo} user={each.city_id.admin_id.name} tags={each.tags} duration={each.duration} price={each.price}/>)
+            itineraries.map(each=><ItineraryComponent key={each._id} id={each._id} name={each.name} photo={each.photo} user={each.city_id.admin_id.name} tags={each.tags} duration={each.duration} price={each.price}/>)
           ) : (
             <p className="mt-4 p-3 font-semibold italic text-white md:text-[30px] border-4 bg-black">This city has no itineraries at the moment</p>
           ))}

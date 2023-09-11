@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Tickets from "./Tickets";
+import Activities from "./Activities";
 
-export default function ItineraryComponent({ name, photo, user, tags, duration, price }) {
+export default function ItineraryComponent({ name, photo, user, tags, duration, price, id }) {
   const [view, setView] = useState(true);
   const time = Math.floor(duration/60)
 
@@ -51,9 +52,9 @@ export default function ItineraryComponent({ name, photo, user, tags, duration, 
               </span>
             </div>
             </div><hr className="border-gray-300" />
-          <p className="flex flex-row flex-wrap w-full px-4 py-2 overflow-hidden text-center justify-center items-center text-gray-700 h-[80px] text-base">
-            The activities section is temporarily under construction 
-          </p>
+         
+            {<Activities itinerary_id={id}/>}
+          
           <hr className="border-gray-300" /></>)}
         </div>
       </div>

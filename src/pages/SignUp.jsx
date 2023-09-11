@@ -1,32 +1,52 @@
-import { Link as Anchor } from "react-router-dom"
+import { Link as Anchor, useNavigate } from "react-router-dom"
 import { useRef } from "react"
-import axios from "axios"
-import apiUrl from '../apiUrl'
+import { useDispatch, useSelector } from "react-redux"
+import user_actions from "../store/actions/users"
+import Swal from "sweetalert2"
+const { register } = user_actions
 
 export default function SignUp() {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
   const name = useRef()
   const lastName = useRef()
   const country = useRef()
   const photo = useRef()
   const mail = useRef()
   const password = useRef()
+  let countries = ["Argentina", "France", "Spain", "Japan", "United States", "Germany", "Brazil", "Egypt"]
 
   async function handleSignUp() {
-    try {
-      let data = {
-        name: name.current.value,
-        lastName: lastName.current.value,
-        country: country.current.value,
-        photo: photo.current.value,
-        mail: mail.current.value,
-        password: password.current.value
-      }
-      await axios.post(apiUrl + 'users/signup', data)
-      console.log(data);
-    } catch (error) {
-      console.log(error);
+    let data = {
+      name: name.current.value,
+      lastName: lastName.current.value,
+      country: country.current.value,
+      photo: photo.current.value ? photo.current.value : "https://www.cinemascomics.com/wp-content/uploads/2020/06/poder-darth-vader.jpg",
+      mail: mail.current.value,
+      password: password.current.value
     }
+    let responseDispatch = dispatch(register({ data }))
+      .then(res => {
+        console.log(res)
+        if (res.payload.success === true) {
+          Swal.fire({
+            icon: 'success',
+            title: 'User created!',
+          })
+          navigate('/auth/signin')
+        } else if (res.payload.messages.length > 0) {
+          let html = res.payload.messages.map(each => `<p>${each}</p>`).join('')
+          Swal.fire({
+            title: 'Something went wrong!',
+            icon: 'error',
+            html
+          })
+        }
+      })
+      .catch(err => console.log(err))
   }
+  let store = useSelector(store => store.users)
+  console.log(store);
 
   return (
     <div className="w-full min-h-[78vh] bg-[url(/img/backgroundSign.jpg)] bg-cover grow">
@@ -44,7 +64,10 @@ export default function SignUp() {
             </div>
             <div className="mb-2">
               <label htmlFor="country" className="block text-sm font-semibold text-white cursor-pointer">Country:</label>
-              <input ref={country} type="text" name="country" id="country" className="block w-full px-4 py-2 mt-2 text-[#4f46e5] font-bold bg-white border rounded-md focus:border-[#4f46e5] focus:ring-[#4f46e5] focus:outline-none focus:ring focus:ring-opacity-40" />
+              <select ref={country} name="country" id="country" className="block w-full px-4 py-2 mt-2 text-[#4f46e5] font-bold bg-white border rounded-md focus:border-[#4f46e5] focus:ring-[#4f46e5] focus:outline-none focus:ring focus:ring-opacity-40">
+                <option value=""></option>
+                {countries.map((country) => (<option key={country} value={country}>{country}</option>))}
+              </select>
             </div>
             <div className="mb-2">
               <label htmlFor="photo" className="block text-sm font-semibold text-white cursor-pointer">Photo:</label>
@@ -70,6 +93,3 @@ export default function SignUp() {
     </div>
   )
 }
-
-
-
