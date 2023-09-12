@@ -2,13 +2,29 @@ import { useState } from "react";
 import { Link as Anchor, } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import user_actions from "../store/actions/users";
+import Swal from "sweetalert2";
 const { signout } = user_actions
+
 
 export default function NavBar() {
     const [navbar, setNavbar] = useState(false);
 
     let name = useSelector(store => store.users.user?.name)
     let dispatch = useDispatch()
+    const handleSignOut = () => {
+        Swal.fire({
+            title: 'Are you sure you want to log out?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, I am!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                dispatch(signout());
+            }
+        });
+    };
 
     return (
         <header className="min-h-[13vh] flex justify-center items-center bg-black">
@@ -19,7 +35,7 @@ export default function NavBar() {
                             <Anchor to={'/'} className="flex items-center  w-[183px] h-[43px] font-sans font-bold text-[32px] text-white hover:text-[#4f46e5] leading-[42.56px]">My Tinerary</Anchor>
                             <span className="flex flex-col items-start text-center md:ml-7 md:flex-row sm:items-start md:items-center">
                                 <p className="text-[20px] text-white">{name}</p>
-                                {name && <span onClick={() => dispatch(signout())} className=" text-white text-[12px] text-center items-center cursor-pointer h-[20px] w-[60px] ml-1 rounded bg-[#4f46e5]">Sign Out</span>}
+                                {name && <span onClick={()=>handleSignOut()} className=" text-white text-[12px] text-center items-center cursor-pointer h-[20px] w-[60px] ml-1 rounded bg-[#4f46e5]">Sign Out</span>}
                             </span>
                             <div className="md:hidden">
                                 <button
